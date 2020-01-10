@@ -24,7 +24,7 @@ class NewVisitorTest(unittest.TestCase):
         self.assertIn("Danni's Game", header_text)
 
         # She is invited to dive straight in and add player 1's name
-        player_text = self.browser.find_element_by_tage_name("h3").text
+        player_text = self.browser.find_element_by_tag_name("h3").text
         self.assertIn("Player 1", player_text)
         inputbox = self.browser.find_element_by_id("player_name")
         self.assertEqual(
@@ -41,7 +41,7 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
 
-        table = self.bowser.find_element_by_id("id_list_table")
+        table = self.browser.find_element_by_id("id_list_table")
         rows = table.find_elements_by_tag_name("tr")
         self.assertTrue(any(row.text == "Player 1" for row in rows))
 
