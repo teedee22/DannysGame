@@ -1,8 +1,6 @@
 from selenium import webdriver
 import unittest
 
-browser = webdriver.Firefox()
-
 
 class NewVisitorTest(unittest.TestCase):
     def setUp(self):
@@ -41,6 +39,16 @@ class NewVisitorTest(unittest.TestCase):
 
         # She visits the URL on her phone and notices the game is still there,
         # waiting for player 3's input.
+
+        # She passes the phone to her dad, who inputs 'Lord Farquaad' and hits
+        # enter. Player 4 appears beneath with a text box next to it.
+
+        # She notices underneath player 4 a button that says Start Game.
+        # She presses it, and the game shows the four players in a random order
+        # On the screen. She closes her browser and goes back to the unique URL
+
+        # The screen still shows the four players in a random order
+        # On the screen
 
 
 if __name__ == "__main__":
