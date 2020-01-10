@@ -43,7 +43,7 @@ class NewVisitorTest(unittest.TestCase):
 
         table = self.browser.find_element_by_id("id_list_table")
         rows = table.find_elements_by_tag_name("tr")
-        self.assertTrue(any(row.text == "Player 1" for row in rows))
+        self.assertIn("Player 1", [row.text for row in rows])
 
         # She passes to her brother, who enters 'Pingu' into the textbox and
         # hits enter
