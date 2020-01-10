@@ -1,4 +1,6 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
 import unittest
 
 
@@ -18,17 +20,34 @@ class NewVisitorTest(unittest.TestCase):
 
         # She notices that the game is named after her
         self.assertIn("Danni", self.browser.title)
-        self.fail("Finish the test")
+        header_text = self.browser.find_element_by_tag_name("h1").text
+        self.assertIn("Danni's Game", header_text)
 
         # She is invited to dive straight in and add player 1's name
+        player_text = self.browser.find_element_by_tage_name("h3").text
+        self.assertIn("Player 1", player_text)
+        inputbox = self.browser.find_element_by_id("player_name")
+        self.assertEqual(
+            inputbox.get_attribute("placeholder"),
+            "Enter your player's character name",
+        )
+
         # She types 'Henry the Hoover' into a text box
+        inputbox.send_keys("Henry the Hoover")
 
         # When she hits enter, the page updates, and now the page shows
         # player 1 with a confirmation next to it that they she has played
-        # and player 2 appears beneath with a text box next to it
+        # and player 2 appears above with a text box next to it
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        table = self.bowser.find_element_by_id("id_list_table")
+        rows = table.find_elements_by_tag_name("tr")
+        self.assertTrue(any(row.text == "Player 1" for row in rows))
 
         # She passes to her brother, who enters 'Pingu' into the textbox and
         # hits enter
+        self.fail("Finish the test")
 
         # The page updates again, showing player 1 and player 2 have entered
         # their player names and the game is now waiting for player 3
