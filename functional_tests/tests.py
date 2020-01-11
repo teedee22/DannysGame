@@ -59,6 +59,8 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys(Keys.ENTER)
 
         self.wait_for_row_in_list_table()
+        player_text = self.browser.find_element_by_tag_name("h3").text
+        self.assertIn("Player 2", player_text)
 
         # She passes to her brother, who enters 'Pingu' into the textbox and
         # hits enter
