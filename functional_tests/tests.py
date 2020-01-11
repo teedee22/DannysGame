@@ -1,10 +1,11 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 import unittest
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
 
@@ -16,7 +17,7 @@ class NewVisitorTest(unittest.TestCase):
         # Dannie wants to play her guess who game with her family without the
         # need for a quiz master. She has heard that she can use a cool new
         # website, she goes to the home page
-        self.browser.get("http://localhost:8000")
+        self.browser.get(self.live_server_url)
 
         # She notices that the game is named after her
         self.assertIn("", self.browser.title)
@@ -68,7 +69,3 @@ class NewVisitorTest(unittest.TestCase):
 
         # The screen still shows the four players in a random order
         # On the screen
-
-
-if __name__ == "__main__":
-    unittest.main(warnings="ignore")
