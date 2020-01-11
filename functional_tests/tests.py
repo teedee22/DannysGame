@@ -1,8 +1,10 @@
 from django.test import LiveServerTestCase
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
 import time
-import unittest
+
+MAX_WAIT = 10
 
 
 class NewVisitorTest(LiveServerTestCase):
@@ -12,6 +14,21 @@ class NewVisitorTest(LiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def wait_for_row_in_list_table(self):
+        start_time = time.time()
+        while True:
+            try:
+                table = self.browser.find_element_by_id("id_list_table")
+                rows = table.find_elements_by_tag_name("tr")
+                self.assertIn(
+                    f"Player {len(rows)}", [row.text for row in rows]
+                )
+                return
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > MAX_WAIT:
+                    raise e
+                time.sleep(0.5)
+
     def test_can_start_a_game_and_retrieve_it_later(self):
 
         # Dannie wants to play her guess who game with her family without the
@@ -20,7 +37,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser.get(self.live_server_url)
 
         # She notices that the game is named after her
-        self.assertIn("", self.browser.title)
+        self.assertIn("Dannie", self.browser.title)
         header_text = self.browser.find_element_by_tag_name("h1").text
         self.assertIn("Dannie's Game", header_text)
 
@@ -40,19 +57,19 @@ class NewVisitorTest(LiveServerTestCase):
         # player 1 with a confirmation next to it that they she has played
         # and player 2 appears above with a text box next to it
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
 
-        table = self.browser.find_element_by_id("id_list_table")
-        rows = table.find_elements_by_tag_name("tr")
-        self.assertIn("Player 1", [row.text for row in rows])
+        self.wait_for_row_in_list_table()
 
         # She passes to her brother, who enters 'Pingu' into the textbox and
         # hits enter
-        self.fail("Finish the test")
+        inputbox = self.browser.find_element_by_id("player_name")
+        inputbox.send_keys("Pingu")
+        inputbox.send_keys(Keys.ENTER)
 
         # The page updates again, showing player 1 and player 2 have entered
+        self.wait_for_row_in_list_table()
         # their player names and the game is now waiting for player 3
-
+        self.fail("Finish the test")
         # Dannie wonders whether the site will remember the game, because her
         # dad, the third player is busy at the moment. She notices the site has
         # generated a unique URL for her which she can revisit at any time.
