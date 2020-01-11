@@ -2,7 +2,7 @@
     <title>Dannie's Game</title>
     <h1>Dannie's Game</h1>
     <h3>Player {{ players|length|add:"1" }}</h3>
-    <form method="POST" action="/">
+    <form method="POST" action="/games/new">
         <input name="player_text" id="player_name" placeholder="Enter your player's character name" autofocus/>
         {% csrf_token %}
     </form>
