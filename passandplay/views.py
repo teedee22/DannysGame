@@ -1,12 +1,9 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from passandplay.models import Player
 
 
 def home_page(request):
-    # if request.method == "POST":
-    return render(
-        request,
-        "home.html",
-        {"new_player_text": request.POST.get("player_text", "")},
-    )
-    # return render(request, "home.html")
+    if request.method == "POST":
+        Player.objects.create(text=request.POST["player_text"])
+        return redirect("/")
+    return render(request, "home.html", {"players": Player.objects.all()})

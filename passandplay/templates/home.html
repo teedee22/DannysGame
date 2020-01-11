@@ -3,10 +3,12 @@
     <h1>Danni's Game</h1>
     <h3>Player 1</h3>
     <form method="POST">
-        <input name="player_text" id="player_name" placeholder="Enter your player's character name" />
+        <input name="player_text" id="player_name" placeholder="Enter your player's character name" autofocus/>
         {% csrf_token %}
     </form>
     <table id="id_list_table">
-        <tr><td>{% if new_player_text %}Player 1{% endif %}</td></tr>
+        {% for player in players %}
+            <tr><td>Player {{ forloop.counter }}</td></tr>
+        {% endfor %}
     </table>
 </html>

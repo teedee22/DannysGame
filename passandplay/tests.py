@@ -8,11 +8,30 @@ class HomePageTest(TestCase):
         self.assertTemplateUsed(response, "home.html")
 
     def test_can_save_a_POST_request(self):
+        self.client.post("/", data={"player_text": "A new character"})
+        self.assertEqual(Player.objects.count(), 1)
+        new_player = Player.objects.first()
+        self.assertEqual(new_player.text, "A new character")
+
+    def test_redirects_after_POST(self):
         response = self.client.post(
             "/", data={"player_text": "A new character"}
         )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["location"], "/")
+
+    def test_only_saves_players_when_necessary(self):
+        self.client.get("/")
+        self.assertEqual(Player.objects.count(), 0)
+
+    def test_displays_all_players_who_have_played(self):
+        Player.objects.create(text="First character")
+        Player.objects.create(text="Second character")
+
+        response = self.client.get("/")
+
         self.assertIn("Player 1", response.content.decode())
-        self.assertTemplateUsed(response, "home.html")
+        self.assertIn("Player 2", response.content.decode())
 
 
 class PlayerModelTest(TestCase):
