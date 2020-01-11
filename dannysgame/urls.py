@@ -18,6 +18,9 @@ from django.urls import path
 
 urlpatterns = [
     path("", views.home_page, name="home"),
-    path("games/testgame", views.game_view, name="game_view"),
+    path("games/<int:game_id>/", views.game_view, name="game_view"),
+    path(
+        "games/<int:game_id>/add_player", views.add_player, name="add_player"
+    ),
     path("games/new", views.new_game, name="new_game"),
 ]

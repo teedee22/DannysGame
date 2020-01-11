@@ -14,18 +14,36 @@ class HomePageTest(TestCase):
 
 class GamesViewTest(TestCase):
     def test_uses_game_template(self):
-        response = self.client.get("/games/testgame")
+        game = Game.objects.create()
+        response = self.client.get(f"/games/{game.id}/")
         self.assertTemplateUsed(response, "passandplaygame.html")
 
-    def test_displays_all_game_characters(self):
-        game = Game.objects.create()
-        Player.objects.create(text="First character", game=game)
-        Player.objects.create(text="Second character", game=game)
+    def test_displays_only_players_in_current_game(self):
+        correct_game = Game.objects.create()
+        Player.objects.create(text="First character", game=correct_game)
+        Player.objects.create(text="Second character", game=correct_game)
+        other_game = Game.objects.create()
+        Player.objects.create(
+            text="Other game First character", game=other_game
+        )
+        Player.objects.create(
+            text="Other game Second character", game=other_game
+        )
+        Player.objects.create(
+            text="Other game Third character", game=other_game
+        )
 
-        response = self.client.get("/games/testgame")
+        response = self.client.get(f"/games/{correct_game.id}/")
 
         self.assertContains(response, "Player 1")
         self.assertContains(response, "Player 2")
+        # self.assertNotContains(response, "Player 3")
+
+    def test_passes_correct_game_to_template(self):
+        other_game = Game.objects.create()
+        correct_game = Game.objects.create()
+        response = self.client.get(f"/games/{correct_game.id}/")
+        self.assertEqual(response.context["game"], correct_game)
 
 
 class NewGameTest(TestCase):
@@ -39,7 +57,35 @@ class NewGameTest(TestCase):
         response = self.client.post(
             "/games/new", data={"player_text": "A new character"}
         )
-        self.assertRedirects(response, "/games/testgame")
+        new_game = Game.objects.first()
+        self.assertRedirects(response, f"/games/{new_game.id}/")
+
+
+class NewPlayerTest(TestCase):
+    def test_can_save_a_POST_request_to_an_existing_game(self):
+        other_game = Game.objects.create()
+        correct_game = Game.objects.create()
+
+        self.client.post(
+            f"/games/{correct_game.id}/add_player",
+            data={"player_text": "Spongebob"},
+        )
+
+        self.assertEqual(Player.objects.count(), 1)
+        new_player = Player.objects.first()
+        self.assertEqual(new_player.text, "Spongebob")
+        self.assertEqual(new_player.game, correct_game)
+
+    def test_redirects_to_game_view(self):
+        other_game = Game.objects.create()
+        correct_game = Game.objects.create()
+
+        response = self.client.post(
+            f"/games/{correct_game.id}/add_player",
+            data={"player_text": "Spongebob"},
+        )
+
+        self.assertRedirects(response, f"/games/{correct_game.id}/")
 
 
 class PlayerAndGameModelTest(TestCase):
