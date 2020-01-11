@@ -13,15 +13,15 @@ class NewVisitorTest(unittest.TestCase):
 
     def test_can_start_a_game_and_retrieve_it_later(self):
 
-        # Dani wants to play her guess who game with her family without the
+        # Dannie wants to play her guess who game with her family without the
         # need for a quiz master. She has heard that she can use a cool new
         # website, she goes to the home page
         self.browser.get("http://localhost:8000")
 
         # She notices that the game is named after her
-        self.assertIn("Danni", self.browser.title)
+        self.assertIn("", self.browser.title)
         header_text = self.browser.find_element_by_tag_name("h1").text
-        self.assertIn("Danni's Game", header_text)
+        self.assertIn("Dannie's Game", header_text)
 
         # She is invited to dive straight in and add player 1's name
         player_text = self.browser.find_element_by_tag_name("h3").text
@@ -52,7 +52,7 @@ class NewVisitorTest(unittest.TestCase):
         # The page updates again, showing player 1 and player 2 have entered
         # their player names and the game is now waiting for player 3
 
-        # Danni wonders whether the site will remember the game, because her
+        # Dannie wonders whether the site will remember the game, because her
         # dad, the third player is busy at the moment. She notices the site has
         # generated a unique URL for her which she can revisit at any time.
 
