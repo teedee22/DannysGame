@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from passandplay.models import Player
+from passandplay.models import Game, Player
 
 
 def home_page(request):
@@ -13,5 +13,6 @@ def game_view(request):
 
 
 def new_game(request):
-    Player.objects.create(text=request.POST["player_text"])
+    game = Game.objects.create()
+    Player.objects.create(text=request.POST["player_text"], game=game)
     return redirect("/games/testgame")
