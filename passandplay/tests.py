@@ -18,20 +18,26 @@ class HomePageTest(TestCase):
             "/", data={"player_text": "A new character"}
         )
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response["location"], "/")
+        self.assertEqual(response["location"], "/games/testgame")
 
     def test_only_saves_players_when_necessary(self):
         self.client.get("/")
         self.assertEqual(Player.objects.count(), 0)
 
-    def test_displays_all_players_who_have_played(self):
+
+class GamesViewTest(TestCase):
+    def test_uses_game_template(self):
+        response = self.client.get("/games/testgame")
+        self.assertTemplateUsed(response, "passandplaygame.html")
+
+    def test_displays_all_game_characters(self):
         Player.objects.create(text="First character")
         Player.objects.create(text="Second character")
 
-        response = self.client.get("/")
+        response = self.client.get("/games/testgame")
 
-        self.assertIn("Player 1", response.content.decode())
-        self.assertIn("Player 2", response.content.decode())
+        self.assertContains(response, "Player 1")
+        self.assertContains(response, "Player 2")
 
 
 class PlayerModelTest(TestCase):

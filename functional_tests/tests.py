@@ -70,7 +70,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # The page updates again, showing player 1 and player 2 have entered
         self.wait_for_row_in_list_table()
-        time.sleep(0.1)
+        time.sleep(1)
         # their player names and the game is now waiting for player 3
         player_text = self.browser.find_element_by_tag_name("h3").text
         self.assertIn("Player 3", player_text)
@@ -117,7 +117,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Bob gets his own unique URL
         bob_game_url = self.browser.current_url
-        self.assertRegex(bob_game_url, "/games/.+")
+        self.assertRegex(bob_game_url, "games/.+")
         self.assertNotEqual(bob_game_url, dannie_game_url)
 
         # There is no trace of Dannie's game
