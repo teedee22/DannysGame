@@ -29,7 +29,7 @@ class NewVisitorTest(LiveServerTestCase):
                     raise e
                 time.sleep(0.5)
 
-    def test_can_start_a_game_and_retrieve_it_later(self):
+    def test_can_start_a_game_and_add_players(self):
 
         # Dannie wants to play her guess who game with her family without the
         # need for a quiz master. She has heard that she can use a cool new
@@ -70,11 +70,61 @@ class NewVisitorTest(LiveServerTestCase):
 
         # The page updates again, showing player 1 and player 2 have entered
         self.wait_for_row_in_list_table()
+        time.sleep(0.1)
         # their player names and the game is now waiting for player 3
-        self.fail("Finish the test")
-        # Dannie wonders whether the site will remember the game, because her
+        player_text = self.browser.find_element_by_tag_name("h3").text
+        self.assertIn("Player 3", player_text)
+
+    def test_multiple_users_can_start_new_games_at_different_urls(self):
+        self.browser.get(self.live_server_url)
+
+        # Dannie starts a new Game
+        inputbox = self.browser.find_element_by_id("player_name")
+        inputbox.send_keys("Henry the hoover")
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table()
+
+        # She passes to her brother
+        inputbox = self.browser.find_element_by_id("player_name")
+        inputbox.send_keys("Pingu")
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table()
+        # She wonders whether the site will remember the game, because her
         # dad, the third player is busy at the moment. She notices the site has
         # generated a unique URL for her which she can revisit at any time.
+
+        dannie_game_url = self.browser.current_url
+        self.assertRegex(dannie_game_url, "/games/.+")
+
+        # Now a new user, her uncle Bob, comes along to the website
+
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        # Bob visits the home page. There is no sign of Dannie and her
+        # brother's game
+
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name("body").text
+        self.assertNotIn("Henry", page_text)
+        self.assertNotIn("Pingu", page_text)
+
+        # Bob starts a new game by entering a new player
+        inputbox = self.browser.find_element_by_id("player_name")
+        inputbox.send_keys("The Queen")
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table()
+
+        # Bob gets his own unique URL
+        bob_game_url = self.browser.current_url
+        self.assertRegex(bob_game_url, "/games/.+")
+        self.assertNotEqual(bob_game_url, dannie_game_url)
+
+        # There is no trace of Dannie's game
+        page_text = self.browser.find_element_by_tag_name("body").text
+        self.assertNotIn("Pingu", page_text)
+
+        ## TODO
 
         # She visits the URL on her phone and notices the game is still there,
         # waiting for player 3's input.
