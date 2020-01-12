@@ -27,6 +27,16 @@ cat ./deploy_tools/gunicorn-systemd.template.service \
     | sed "s/DOMAIN/danniesgame.com/g" \
     | sudo tee /etc/systemd/system/danniesgame.com.service
 
+cat ./deploy_tools/gunicorn.systemd.template.socket \
+    | sed "s/DOMAIN/danniesgame.com/g" \
+    | sudo tee /etc/systemd/system/danniesgame.com.socket
+
+sudo systemctl daemon-reload
+sudo systemctl reload nginx
+sudo systemctl enable danniesgame.com
+sudo systemctl start danniesgame.com
+sudo systemctl restart nginx
+
 ## Folder structure:
 
 Assume we have a user account at /home/username
