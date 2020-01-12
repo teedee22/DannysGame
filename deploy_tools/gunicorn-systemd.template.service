@@ -1,8 +1,18 @@
 [Unit]
-Description=gunicorn socket
+Description=gunicorn daemon
+Requires=DOMAIN.socket
+After=network.target
 
-[Socket]
-ListenStream=/run/DOMAIN.sock
+[Service]
+User=toby
+Group=www-data
+WorkingDirectory=/home/toby/sites/DOMAIN
+EnvironmentFile=/home/toby/sites/DOMAIN/.env
+ExecStart=/home/toby/sites/DOMAIN/env/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/DOMAIN.sock \
+          dannysgame.wsgi:application
 
 [Install]
-WantedBy=sockets.target
+WantedBy=multi-user.target

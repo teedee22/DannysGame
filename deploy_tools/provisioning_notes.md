@@ -11,10 +11,21 @@ eg, on Ubuntu:
 * see nginx.template.conf
 * replace DOMAIN with, e.g., staging.my-domain.com
 
+cat ./deploy_tools/nginx.template.conf \
+    | sed "s/DOMAIN/danniesgame.com/g" \
+    | sudo tee /etc/nginx/sites-available/danniesgame.com
+
+    sudo ln -s /etc/nginx/sites-available/danniesgame.com \
+    /etc/nginx/sites-enabled/danniesgame.com
+
 ## Systemd service
 
 * see gunicorn-systemd.template.service
 * replace DOMAIN with, e.g., staging.my-domain.com
+
+cat ./deploy_tools/gunicorn-systemd.template.service \
+    | sed "s/DOMAIN/danniesgame.com/g" \
+    | sudo tee /etc/systemd/system/danniesgame.com.service
 
 ## Folder structure:
 
