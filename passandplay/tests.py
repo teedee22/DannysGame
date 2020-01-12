@@ -32,12 +32,15 @@ class GamesViewTest(TestCase):
         Player.objects.create(
             text="Other game Third character", game=other_game
         )
+        Player.objects.create(
+            text="Other game Fourth character", game=other_game
+        )
 
         response = self.client.get(f"/games/{correct_game.id}/")
 
         self.assertContains(response, "Player 1")
         self.assertContains(response, "Player 2")
-        # self.assertNotContains(response, "Player 3")
+        self.assertNotContains(response, "Player 4")
 
     def test_passes_correct_game_to_template(self):
         other_game = Game.objects.create()
@@ -86,6 +89,30 @@ class NewPlayerTest(TestCase):
         )
 
         self.assertRedirects(response, f"/games/{correct_game.id}/")
+
+
+class StartGameTest(TestCase):
+    def test_uses_start_game_template(self):
+        game = Game.objects.create()
+        Player.objects.create(text="one", game=game)
+        Player.objects.create(text="two", game=game)
+        Player.objects.create(text="three", game=game)
+
+        response = self.client.get(f"/games/{game.id}/start_game")
+
+        self.assertTemplateUsed(response, "startgame.html")
+
+    def test_game_displays_all_characters(self):
+        game = Game.objects.create()
+        Player.objects.create(text="one", game=game)
+        Player.objects.create(text="two", game=game)
+        Player.objects.create(text="three", game=game)
+
+        response = self.client.get(f"/games/{game.id}/start_game")
+
+        self.assertContains(response, "one")
+        self.assertContains(response, "two")
+        self.assertContains(response, "three")
 
 
 class PlayerAndGameModelTest(TestCase):

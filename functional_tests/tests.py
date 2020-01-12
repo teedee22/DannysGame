@@ -18,6 +18,7 @@ class NewVisitorTest(LiveServerTestCase):
         start_time = time.time()
         while True:
             try:
+                time.sleep(0.1)
                 table = self.browser.find_element_by_id("id_list_table")
                 rows = table.find_elements_by_tag_name("tr")
                 self.assertIn(
@@ -70,7 +71,6 @@ class NewVisitorTest(LiveServerTestCase):
 
         # The page updates again, showing player 1 and player 2 have entered
         self.wait_for_row_in_list_table()
-        time.sleep(1)
         # their player names and the game is now waiting for player 3
         player_text = self.browser.find_element_by_tag_name("h3").text
         self.assertIn("Player 3", player_text)
@@ -126,15 +126,45 @@ class NewVisitorTest(LiveServerTestCase):
 
         ## TODO
 
-        # She visits the URL on her phone and notices the game is still there,
-        # waiting for player 3's input.
+    def test_user_can_play_game(self):
+        self.browser.get(self.live_server_url)
 
-        # She passes the phone to her dad, who inputs 'Lord Farquaad' and hits
-        # enter. Player 4 appears beneath with a text box next to it.
+        # Dannie starts a new Game and enters the first player
+        inputbox = self.browser.find_element_by_id("player_name")
+        inputbox.send_keys("Henry the hoover")
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table()
 
-        # She notices underneath player 4 a button that says Start Game.
-        # She presses it, and the game shows the four players in a random order
-        # On the screen. She closes her browser and goes back to the unique URL
+        # She passes over to her brother who enters the second player
+        inputbox = self.browser.find_element_by_id("player_name")
+        inputbox.send_keys("Pingu")
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table()
 
+        # He passes to Dannie's father who enters the third character
+        inputbox = self.browser.find_element_by_id("player_name")
+        inputbox.send_keys("Voldermort")
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table()
+
+        # Player 4 appears beneath with a text box next to it.
+        player_text = self.browser.find_element_by_tag_name("h3").text
+        self.assertIn("Player 4", player_text)
+
+        # she notices that there is a button to start the game. She presses it.
+        startbutton = self.browser.find_element_by_id("start_button")
+        startbutton.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        # After pressing the button, the game shows the four players in a
+        # random order On the screen. She closes her browser and goes back
+        # to the unique URL
+        page_text = self.browser.find_element_by_tag_name("body").text
+        self.assertIn("Henry", page_text)
+        self.assertIn("Voldermort", page_text)
+        self.assertIn("Pingu", page_text)
+
+        # She closes her browser and goes back to the unique URL
         # The screen still shows the four players in a random order
         # On the screen
+        self.fail("complete the test")
