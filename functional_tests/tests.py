@@ -75,6 +75,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # The page updates again, showing player 1 and player 2 have entered
         self.wait_for_row_in_list_table()
+        time.sleep(1)
         # their player names and the game is now waiting for player 3
         player_text = self.browser.find_element_by_tag_name("h3").text
         self.assertIn("Player 3", player_text)
@@ -142,12 +143,14 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys("Pingu")
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table()
+        time.sleep(1.5)
 
         # He passes to Dannie's father who enters the third character
         inputbox = self.browser.find_element_by_id("player_name")
         inputbox.send_keys("Voldermort")
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table()
+        time.sleep(1.5)
 
         # Player 4 appears beneath with a text box next to it.
         player_text = self.browser.find_element_by_tag_name("h3").text
