@@ -124,8 +124,6 @@ class NewVisitorTest(LiveServerTestCase):
         page_text = self.browser.find_element_by_tag_name("body").text
         self.assertNotIn("Pingu", page_text)
 
-        ## TODO
-
     def test_user_can_play_game(self):
         self.browser.get(self.live_server_url)
 
@@ -164,7 +162,13 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn("Voldermort", page_text)
         self.assertIn("Pingu", page_text)
 
-        # She closes her browser and goes back to the unique URL
-        # The screen still shows the four players in a random order
-        # On the screen
-        self.fail("complete the test")
+    def test_layout_and_styling(self):
+        # Dannie goes to the home page
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        # She notices the inbox box is centered
+        inputbox = self.browser.find_element_by_id("player_name")
+        self.assertAlmostEqual(
+            inputbox.location["x"] + inputbox.size["width"] / 2, 512, delta=10
+        )

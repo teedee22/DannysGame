@@ -1,15 +1,18 @@
-<html>
-    <title>Dannie's Game</title>
-    <h1>Dannie's Game</h1>
+{% extends 'base.html' %}
+{% block form_block %}
     <h3>Player {{ players|length|add:"1" }}</h3>
     <form method="POST" action="/games/{{ game.id }}/add_player">
         <input name="player_text" id="player_name" placeholder="Enter your player's character name" autofocus/>
         {% csrf_token %}
     </form>
-    <table id="id_list_table">
+{% endblock %}
+{% block player_table_block %}
+    <table class="table" id="id_list_table">
         {% for player in players %}
             <tr><td>Player {{ forloop.counter }}</td></tr>
         {% endfor %}
     </table>
-    <a href="/games/{{ game.id }}/start_game"<button type="button" id="start_button">Start Game</button></a>
-</html>
+{% endblock %}
+{% block button %}
+    <a href="/games/{{ game.id }}/start_game"<button type="button" class="btn btn-info" id="start_button">Start Game</button></a>
+{% endblock %}

@@ -1,7 +1,9 @@
-<html>
-    <title>Dannie's Game</title>
-    <h1>Dannie's Game</h1>
+{% extends 'base.html' %}
+
+{% block player_table_block %}
+<table class="table" id="id_list_table">
     {% for player in playersrandom %}
-    <p>{{player}}</p>
+        <tr><td>{{ player }}</td></tr>
     {% endfor %}
-</html>
+</table>
+{% endblock %}
