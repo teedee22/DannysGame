@@ -1,6 +1,6 @@
 ## Dannie's Game
 
-The need for Dannie's game arose on 4th January 2020 where my extended family couldn't all play "Danni's game", named after my cousin Danni, at the same time without one person needing to be quiz master.
+The need for Dannie's game arose on 4th January 2020 where my extended family couldn't all play "Dannie's game", named after my cousin Dannie, at the same time without one person needing to be quiz master.
 
 I solved this with a simple python app on the day using my phone but I have decided to create a project using TDD and Django to make the solution available to my cousin and her family any time.
 
