@@ -7,6 +7,11 @@ MAX_WAIT = 10
 
 
 class NewVisitorTest(FunctionalTest):
+    def input_character_name(self, character_name):
+        inputbox = self.browser.find_element_by_id("player_name")
+        inputbox.send_keys(character_name)
+        inputbox.send_keys(Keys.ENTER)
+
     def test_can_start_a_game_and_add_players(self):
 
         # Dannie wants to play her guess who game with her family without the
@@ -44,13 +49,11 @@ class NewVisitorTest(FunctionalTest):
 
         # She passes to her brother, who enters 'Pingu' into the textbox and
         # hits enter
-        inputbox = self.browser.find_element_by_id("player_name")
-        inputbox.send_keys("Pingu")
-        inputbox.send_keys(Keys.ENTER)
+        self.input_character_name("Pingu")
 
         # The page updates again, showing player 1 and player 2 have entered
         self.wait_for_row_in_list_table()
-
+        # The page shows it is waiting for player 3's input
         self.wait_for(
             lambda: self.assertIn(
                 self.browser.find_element_by_tag_name("h3").text, "Player 3",
@@ -61,15 +64,11 @@ class NewVisitorTest(FunctionalTest):
         self.browser.get(self.live_server_url)
 
         # Dannie starts a new Game
-        inputbox = self.browser.find_element_by_id("player_name")
-        inputbox.send_keys("Henry the hoover")
-        inputbox.send_keys(Keys.ENTER)
+        self.input_character_name("Henry the Hoover")
         self.wait_for_row_in_list_table()
 
         # She passes to her brother
-        inputbox = self.browser.find_element_by_id("player_name")
-        inputbox.send_keys("Pingu")
-        inputbox.send_keys(Keys.ENTER)
+        self.input_character_name("Pingu")
         self.wait_for_row_in_list_table()
         # She wonders whether the site will remember the game, because her
         # dad, the third player is busy at the moment. She notices the site has
@@ -92,9 +91,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertNotIn("Pingu", page_text)
 
         # Bob starts a new game by entering a new player
-        inputbox = self.browser.find_element_by_id("player_name")
-        inputbox.send_keys("The Queen")
-        inputbox.send_keys(Keys.ENTER)
+        self.input_character_name("The Queen")
         self.wait_for_row_in_list_table()
 
         # Bob gets his own unique URL
@@ -110,22 +107,16 @@ class NewVisitorTest(FunctionalTest):
         self.browser.get(self.live_server_url)
 
         # Dannie starts a new Game and enters the first player
-        inputbox = self.browser.find_element_by_id("player_name")
-        inputbox.send_keys("Henry the hoover")
-        inputbox.send_keys(Keys.ENTER)
+        self.input_character_name("Henry the hoover")
         self.wait_for_row_in_list_table()
 
         # She passes over to her brother who enters the second player
-        inputbox = self.browser.find_element_by_id("player_name")
-        inputbox.send_keys("Pingu")
-        inputbox.send_keys(Keys.ENTER)
+        self.input_character_name("Pingu")
         self.wait_for_row_in_list_table()
         time.sleep(1.5)
 
         # He passes to Dannie's father who enters the third character
-        inputbox = self.browser.find_element_by_id("player_name")
-        inputbox.send_keys("Voldermort")
-        inputbox.send_keys(Keys.ENTER)
+        self.input_character_name("Voldermort")
         self.wait_for_row_in_list_table()
 
         # Player 4 appears beneath with a text box next to it.
@@ -138,12 +129,15 @@ class NewVisitorTest(FunctionalTest):
         # she notices that there is a button to start the game. She presses it.
         startbutton = self.browser.find_element_by_id("start_button")
         startbutton.send_keys(Keys.ENTER)
-        time.sleep(1)
 
         # After pressing the button, the game shows the four players in a
         # random order On the screen. She closes her browser and goes back
         # to the unique URL
+        self.wait_for(
+            lambda: self.assertIn(
+                "Henry", self.browser.find_element_by_tag_name("body").text
+            )
+        )
         page_text = self.browser.find_element_by_tag_name("body").text
-        self.assertIn("Henry", page_text)
         self.assertIn("Voldermort", page_text)
         self.assertIn("Pingu", page_text)
