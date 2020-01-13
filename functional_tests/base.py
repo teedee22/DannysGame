@@ -1,6 +1,7 @@
 from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.common.keys import Keys
 import time
 import os
 
@@ -40,3 +41,8 @@ class FunctionalTest(LiveServerTestCase):
                 if time.time() - start_time > MAX_WAIT:
                     raise e
                 time.sleep(0.5)
+
+    def input_character_name(self, character_name):
+        inputbox = self.browser.find_element_by_id("player_name")
+        inputbox.send_keys(character_name)
+        inputbox.send_keys(Keys.ENTER)

@@ -9,13 +9,29 @@ class PlayerValidationTest(FunctionalTest):
         self.browser.find_element_by_id("player_name").send_keys(Keys.ENTER)
 
         # The home page refreshes, and there is an error message saying
-        # that list items cannot be blank
+        # that play characters cannot be blank
         self.wait_for(
             lambda: self.assertEqual(
                 self.browser.find_element_by_css_selector(".has-error").text,
-                "You can't have an empty list item",
+                "You can't have a blank player name",
             )
         )
 
-        # She tries again with some text for the item, which now works.
-        self.fail("write me!")
+        # She tries again with some text for the palyer, which now works.
+        self.input_character_name("Mr Blobby")
+        self.wait_for_player_number_to_appear_in_table("1")
+
+        # She tries to submit another blank Player
+        self.browser.find_element_by_id("player_name").send_keys(Keys.ENTER)
+
+        # She receives another warning
+        self.wait_for(
+            lambda: self.assertEqual(
+                self.browser.find_element_by_css_selector(".has-error").text,
+                "You can't have a blank player name",
+            )
+        )
+
+        # She fills in a second player name
+        self.input_character_name("Hagrid")
+        self.wait_for_player_to_appear_in_table("2")
