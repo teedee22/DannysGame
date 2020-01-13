@@ -36,9 +36,11 @@ class NewVisitorTest(FunctionalTest):
         # and player 2 appears above with a text box next to it
         inputbox.send_keys(Keys.ENTER)
 
-        self.wait_for_row_in_list_table()
-        player_text = self.browser.find_element_by_tag_name("h3").text
-        self.assertIn("Player 2", player_text)
+        self.wait_for(
+            lambda: self.assertIn(
+                self.browser.find_element_by_tag_name("h3").text, "Player 2",
+            )
+        )
 
         # She passes to her brother, who enters 'Pingu' into the textbox and
         # hits enter
@@ -48,10 +50,12 @@ class NewVisitorTest(FunctionalTest):
 
         # The page updates again, showing player 1 and player 2 have entered
         self.wait_for_row_in_list_table()
-        time.sleep(1)
-        # their player names and the game is now waiting for player 3
-        player_text = self.browser.find_element_by_tag_name("h3").text
-        self.assertIn("Player 3", player_text)
+
+        self.wait_for(
+            lambda: self.assertIn(
+                self.browser.find_element_by_tag_name("h3").text, "Player 3",
+            )
+        )
 
     def test_multiple_users_can_start_new_games_at_different_urls(self):
         self.browser.get(self.live_server_url)
@@ -123,11 +127,13 @@ class NewVisitorTest(FunctionalTest):
         inputbox.send_keys("Voldermort")
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table()
-        time.sleep(1.5)
 
         # Player 4 appears beneath with a text box next to it.
-        player_text = self.browser.find_element_by_tag_name("h3").text
-        self.assertIn("Player 4", player_text)
+        self.wait_for(
+            lambda: self.assertIn(
+                self.browser.find_element_by_tag_name("h3").text, "Player 4",
+            )
+        )
 
         # she notices that there is a button to start the game. She presses it.
         startbutton = self.browser.find_element_by_id("start_button")
