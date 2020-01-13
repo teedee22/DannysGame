@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import time
 from .base import FunctionalTest
 
 MAX_WAIT = 10
@@ -52,7 +51,7 @@ class NewVisitorTest(FunctionalTest):
         self.input_character_name("Pingu")
 
         # The page updates again, showing player 1 and player 2 have entered
-        self.wait_for_row_in_list_table()
+        self.wait_for_row_in_list_table("2")
         # The page shows it is waiting for player 3's input
         self.wait_for(
             lambda: self.assertIn(
@@ -65,11 +64,11 @@ class NewVisitorTest(FunctionalTest):
 
         # Dannie starts a new Game
         self.input_character_name("Henry the Hoover")
-        self.wait_for_row_in_list_table()
+        self.wait_for_row_in_list_table("1")
 
         # She passes to her brother
         self.input_character_name("Pingu")
-        self.wait_for_row_in_list_table()
+        self.wait_for_row_in_list_table("2")
         # She wonders whether the site will remember the game, because her
         # dad, the third player is busy at the moment. She notices the site has
         # generated a unique URL for her which she can revisit at any time.
@@ -92,7 +91,7 @@ class NewVisitorTest(FunctionalTest):
 
         # Bob starts a new game by entering a new player
         self.input_character_name("The Queen")
-        self.wait_for_row_in_list_table()
+        self.wait_for_row_in_list_table("1")
 
         # Bob gets his own unique URL
         bob_game_url = self.browser.current_url
@@ -108,16 +107,15 @@ class NewVisitorTest(FunctionalTest):
 
         # Dannie starts a new Game and enters the first player
         self.input_character_name("Henry the hoover")
-        self.wait_for_row_in_list_table()
+        self.wait_for_row_in_list_table("1")
 
         # She passes over to her brother who enters the second player
         self.input_character_name("Pingu")
-        self.wait_for_row_in_list_table()
-        time.sleep(1.5)
+        self.wait_for_row_in_list_table("2")
 
         # He passes to Dannie's father who enters the third character
         self.input_character_name("Voldermort")
-        self.wait_for_row_in_list_table()
+        self.wait_for_row_in_list_table("3")
 
         # Player 4 appears beneath with a text box next to it.
         self.wait_for(
