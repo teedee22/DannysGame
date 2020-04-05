@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% block form_block %}
-    <h3>Player {{ players|length|add:"1" }}</h3>
+    <h3>Next Player</h3>
     <form method="POST" action="/games/{{ game.id }}/add_player">
         <input name="player_text" id="player_name" placeholder="Enter your player's character name" autofocus/>
         {% csrf_token %}
     </form>
+    <p>Game link to share <a href="/games/{{game.id}}">here</a>
 {% endblock %}
 {% block player_table_block %}
     <table class="table" id="id_list_table">
@@ -14,5 +15,5 @@
     </table>
 {% endblock %}
 {% block button %}
-    <a href="/games/{{ game.id }}/start_game"<button type="button" class="btn btn-info" id="start_button">Start Game</button></a>
+    <a href="/games/{{ game.id }}/start_game"<button type="button" class="btn btn-info" id="start_button">Start Game - Do not press until everyone is ready</button></a>
 {% endblock %}

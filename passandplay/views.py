@@ -36,7 +36,11 @@ def start_game(request, game_id):
     playerset = Player.objects.filter(game=game)
     players = list(player.text for player in playerset)
     playersrandom = random.sample(players, len(players))
-    return render(request, "startgame.html", {"playersrandom": playersrandom})
+    return render(
+        request,
+        "startgame.html",
+        {"playersrandom": playersrandom, "game": game},
+    )
 
 
 def rules(request):

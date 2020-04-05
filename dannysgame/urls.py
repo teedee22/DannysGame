@@ -19,4 +19,5 @@ from django.urls import include, path
 urlpatterns = [
     path("", passandplay_views.home_page, name="home"),
     path("games/", include("passandplay.urls")),
+    path("rules", passandplay_views.rules, name="rules"),
 ]
