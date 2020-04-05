@@ -37,3 +37,7 @@ def start_game(request, game_id):
     players = list(player.text for player in playerset)
     playersrandom = random.sample(players, len(players))
     return render(request, "startgame.html", {"playersrandom": playersrandom})
+
+
+def rules(request):
+    return render(request, "rules.html")
