@@ -5,7 +5,8 @@ import random
 
 
 def home_page(request):
-    return render(request, "home.html")
+    latest = (Game.objects.all()).count()
+    return render(request, "home.html", {"latest": latest})
 
 
 def game_view(request, game_id):
